@@ -3,10 +3,8 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rigidBody2D;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private float moveSpeed;
-    [SerializeField] private Vector3 startPoint;
     
     [Header("Life Attributtes")]
     [SerializeField] private int lifePoints = 3;
@@ -16,7 +14,6 @@ public class Player : MonoBehaviour
     float horizontalMovementLimit = 0f;
 
     void Start(){
-        startPoint = transform.position;
         horizontalMovementLimit = ICamera.GetCameraWidth(mainCamera) / 2 - transform.localScale.x / 2;
     }
 
@@ -28,7 +25,7 @@ public class Player : MonoBehaviour
     private void Movement(){
         float x = Input.GetAxisRaw("Horizontal");
 
-        rigidBody2D.velocity = new Vector2(x * moveSpeed, 0);
+        transform.position += new Vector3(x * moveSpeed * Time.deltaTime, 0, 0);
 
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -horizontalMovementLimit, horizontalMovementLimit), transform.position.y, 0);
     }

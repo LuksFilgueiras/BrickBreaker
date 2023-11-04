@@ -17,11 +17,17 @@ public class GameController : MonoBehaviour
     public GameObject startScreen;
 
     void Awake(){
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         message.text = "STARTS IN";
         startScreen.SetActive(true);
     }
 
     void Update(){
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            Application.Quit();
+        }
+        
         if(!isPlayerDead && !playerWon){
             StartScreen();
         }else{

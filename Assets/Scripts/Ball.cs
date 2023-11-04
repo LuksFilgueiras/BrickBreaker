@@ -8,8 +8,10 @@ public class Ball : MonoBehaviour
     [SerializeField] private float verticalLimit = 0f;
     [SerializeField] private Vector3 startPoint = Vector3.zero;
     [SerializeField] private bool freeBall = false;
+    [SerializeField] private GameObject releaseTextGameobject; 
 
     [Header("Initialize Components")]
+    [SerializeField] private Player player;
     [SerializeField] private Rigidbody2D rigidBody2D;
     [SerializeField] private Camera mainCamera;
 
@@ -25,6 +27,8 @@ public class Ball : MonoBehaviour
     }
 
     void Update(){
+        releaseTextGameobject.SetActive(!freeBall);
+
         if(!freeBall){
             if(Input.GetKeyDown(KeyCode.Space)){
                 if(verticalSpeed < 0){
@@ -36,26 +40,23 @@ public class Ball : MonoBehaviour
                 freeBall = true;
             }
         }
-    }
 
-    void FixedUpdate(){
         Movement();
     }
 
     private void Movement(){
-        if(rigidBody2D.velocity == Vector2.zero){
-            ChangeDirectionVertical();
-        }
-        
         if(transform.position.x >= horizontalLimit){
+            transform.position = new Vector3(horizontalLimit, transform.position.y, 0);
             ChangeDirectionHorizontal();
         }
 
         if(transform.position.x <= -horizontalLimit){
+            transform.position = new Vector3(-horizontalLimit, transform.position.y, 0);
             ChangeDirectionHorizontal();
         }
 
         if(transform.position.y >= verticalLimit){
+            transform.position = new Vector3(transform.position.x, verticalLimit, 0);
             ChangeDirectionVertical();
         }
 
@@ -65,9 +66,9 @@ public class Ball : MonoBehaviour
         }
 
         if(freeBall){
-            rigidBody2D.velocity = new Vector2(horizontalSpeed, verticalSpeed);
+            transform.position += new Vector3(horizontalSpeed, verticalSpeed) * Time.deltaTime;
         }else{
-            transform.position = new Vector3(transform.parent.position.x, startPoint.y);
+            transform.position = new Vector3(player.transform.position.x, startPoint.y);
         }
     }
 
@@ -104,8 +105,8 @@ public class Ball : MonoBehaviour
                 ChangeDirectionHorizontal();
             }
             else{
-                ChangeDirectionVertical();
                 ChangeDirectionHorizontal();
+                ChangeDirectionVertical();
             }
         }
     }
