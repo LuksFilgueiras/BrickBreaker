@@ -22,9 +22,10 @@ public class BrickWall : MonoBehaviour
 
 
     void Start(){
-        float brickAmount = (GetCameraWidth() - 2 * horizontalWallOffset) / (brickPrefab.brickSizeHorizontal + horizontalBrickGap);
+        float cameraWidth = ICamera.GetCameraWidth(mainCamera);
+        float brickAmount = (cameraWidth - 2 * horizontalWallOffset) / (brickPrefab.brickSizeHorizontal + horizontalBrickGap);
 
-        Vector3 wallStartPosition = new Vector3(-GetCameraWidth() / 2 + horizontalWallOffset, mainCamera.orthographicSize - verticalWallOffset, 0f);
+        Vector3 wallStartPosition = new Vector3(-cameraWidth / 2 + horizontalWallOffset, mainCamera.orthographicSize - verticalWallOffset, 0f);
 
         brickWallHorizontalSize = 0f;
         brickWallVerticalSize = 0f;
@@ -50,14 +51,8 @@ public class BrickWall : MonoBehaviour
         CheckPlayerWin();
     }
 
-    private float GetCameraWidth(){
-        float cameraHeight = 2 * mainCamera.orthographicSize;
-        float cameraWidth = cameraHeight * mainCamera.aspect;
-        return cameraWidth;
-    }
-
     private void CenterBrickWall(){
-        float horizontalOffset = (GetCameraWidth() - brickWallHorizontalSize - horizontalWallOffset) / 2;
+        float horizontalOffset = (ICamera.GetCameraWidth(mainCamera) - brickWallHorizontalSize - horizontalWallOffset) / 2;
         transform.position += new Vector3(horizontalOffset, 0, 0);
     }
 

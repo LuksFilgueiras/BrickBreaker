@@ -19,7 +19,7 @@ public class Ball : MonoBehaviour
     }
 
     void Start(){
-        horizontalLimit = GetCameraWidth() / 2 - transform.localScale.x / 2;
+        horizontalLimit = ICamera.GetCameraWidth(mainCamera) / 2 - transform.localScale.x / 2;
         verticalLimit = mainCamera.orthographicSize - transform.localScale.x / 2;
         startPoint = transform.position;
     }
@@ -77,12 +77,6 @@ public class Ball : MonoBehaviour
 
     public void ChangeDirectionHorizontal(){
         horizontalSpeed *= -1f;
-    }
-
-    private float GetCameraWidth(){
-        float cameraHeight = 2 * mainCamera.orthographicSize;
-        float cameraWidth = cameraHeight * mainCamera.aspect;
-        return cameraWidth;
     }
 
     private void OnCollisionEnter2D(Collision2D col){

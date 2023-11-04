@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
     void Start(){
         startPoint = transform.position;
-        horizontalMovementLimit = GetCameraWidth() / 2 - transform.localScale.x / 2;
+        horizontalMovementLimit = ICamera.GetCameraWidth(mainCamera) / 2 - transform.localScale.x / 2;
     }
 
     void Update(){
@@ -31,12 +31,6 @@ public class Player : MonoBehaviour
         rigidBody2D.velocity = new Vector2(x * moveSpeed, 0);
 
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -horizontalMovementLimit, horizontalMovementLimit), transform.position.y, 0);
-    }
-
-    private float GetCameraWidth(){
-        float cameraHeight = 2 * mainCamera.orthographicSize;
-        float cameraWidth = cameraHeight * mainCamera.aspect;
-        return cameraWidth;
     }
 
     public void RemoveLife(int lifePoints){
