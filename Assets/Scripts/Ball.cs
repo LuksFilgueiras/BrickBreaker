@@ -10,6 +10,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private float horizontalLimit = 0f;
     [SerializeField] private float verticalLimit = 0f;
     [SerializeField] private Vector3 startPoint = Vector3.zero;
+    [SerializeField] private bool freeBall = false;
 
     [Header("Initialize Components")]
     [SerializeField] private Rigidbody2D rigidBody2D;
@@ -24,7 +25,20 @@ public class Ball : MonoBehaviour
         horizontalLimit = GetCameraWidth() / 2 - transform.localScale.x / 2;
         verticalLimit = mainCamera.orthographicSize - transform.localScale.x / 2;
         startPoint = transform.position;
-        verticalSpeed *= -1f;
+    }
+
+    void Update(){
+        if(!freeBall){
+            if(Input.GetKeyDown(KeyCode.Space)){
+                if(verticalSpeed < 0){
+                    verticalSpeed *= -1f;
+                }
+                if(horizontalSpeed < 0){
+                    horizontalSpeed *= -1f;
+                }
+                freeBall = true;
+            }
+        }
     }
 
     void FixedUpdate(){
@@ -32,6 +46,10 @@ public class Ball : MonoBehaviour
     }
 
     private void Movement(){
+        if(rigidBody2D.velocity == Vector2.zero){
+            ChangeDirectionVertical();
+        }
+        
         if(transform.position.x >= horizontalLimit){
             ChangeDirectionHorizontal();
         }
@@ -45,11 +63,15 @@ public class Ball : MonoBehaviour
         }
 
         if(transform.position.y <= -verticalLimit){
-            transform.position = startPoint;
+            freeBall = false;
             FindObjectOfType<Player>().RemoveLife(1);
         }
 
-        rigidBody2D.velocity = new Vector2(horizontalSpeed, verticalSpeed);
+        if(freeBall){
+            rigidBody2D.velocity = new Vector2(horizontalSpeed, verticalSpeed);
+        }else{
+            transform.position = new Vector3(transform.parent.position.x, startPoint.y);
+        }
     }
 
     public void ChangeDirectionVertical(){
@@ -74,11 +96,10 @@ public class Ball : MonoBehaviour
             if(hit.x > 0 && horizontalSpeed < 0){
                 ChangeDirectionHorizontal();
             }
-
             if(hit.x < 0 && horizontalSpeed > 0){
                 ChangeDirectionHorizontal();
             }
-            
+
             ChangeDirectionVertical();
         }
         if(col.gameObject.tag == "Brick"){

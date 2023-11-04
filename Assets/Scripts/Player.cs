@@ -48,9 +48,6 @@ public class Player : MonoBehaviour
             gameController.DeathScreen(true);
             return;
         }
-
-        transform.position = startPoint;
-        gameController.startScreen.SetActive(true);
     }
 
     private void UpdateLifeUI(){

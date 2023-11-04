@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private Image screenBackground;
     [SerializeField] private Color32 screenColor;
     private float timer = 0f;
-    private bool isPlayerDead;
-    private bool playerWon;
+    [SerializeField] private bool isPlayerDead;
+    [SerializeField] private bool playerWon;
 
     public GameObject startScreen;
 
@@ -24,11 +24,11 @@ public class GameController : MonoBehaviour
     }
 
     void Update(){
-        if(!isPlayerDead || !playerWon){
+        if(!isPlayerDead && !playerWon){
             StartScreen();
         }else{
             Time.timeScale = 0;
-            
+
             if(Input.GetKeyDown(KeyCode.Space)){
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
