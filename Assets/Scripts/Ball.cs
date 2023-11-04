@@ -9,11 +9,12 @@ public class Ball : MonoBehaviour
     [SerializeField] private float horizontalSpeed = 1f;
     [SerializeField] private float horizontalLimit = 0f;
     [SerializeField] private float verticalLimit = 0f;
-    [SerializeField] private bool hitted = false;
+    [SerializeField] private Vector3 startPoint = Vector3.zero;
 
     [Header("Initialize Components")]
     [SerializeField] private Rigidbody2D rigidBody2D;
     [SerializeField] private Camera mainCamera;
+
 
     public Rigidbody2D GetRigidbody2D{
         get{return rigidBody2D;}
@@ -22,7 +23,7 @@ public class Ball : MonoBehaviour
     void Start(){
         horizontalLimit = GetCameraWidth() / 2 - transform.localScale.x / 2;
         verticalLimit = mainCamera.orthographicSize - transform.localScale.x / 2;
-
+        startPoint = transform.position;
         verticalSpeed *= -1f;
     }
 
@@ -43,13 +44,9 @@ public class Ball : MonoBehaviour
             ChangeDirectionVertical();
         }
 
-        if(rigidBody2D.velocity.y < 0 && hitted){
-            ChangeDirectionVertical();
-            hitted = false;
-        }
-
         if(transform.position.y <= -verticalLimit){
-            transform.position = new Vector3(0, 0, 0);
+            transform.position = startPoint;
+            FindObjectOfType<Player>().RemoveLife(1);
         }
 
         rigidBody2D.velocity = new Vector2(horizontalSpeed, verticalSpeed);
@@ -71,7 +68,33 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col){
         if(col.gameObject.tag == "Player"){
-            hitted = true;
+            Vector2 hit = col.GetContact(0).point;
+            hit = col.gameObject.GetComponent<Transform>().InverseTransformPoint(hit);
+
+            if(hit.x > 0 && horizontalSpeed < 0){
+                ChangeDirectionHorizontal();
+            }
+
+            if(hit.x < 0 && horizontalSpeed > 0){
+                ChangeDirectionHorizontal();
+            }
+            
+            ChangeDirectionVertical();
+        }
+        if(col.gameObject.tag == "Brick"){
+            Vector3 hit = col.contacts[0].normal;
+            float angle = Vector3.Angle(hit, Vector3.up);
+
+            if(angle == 0f || angle == 180f){
+                ChangeDirectionVertical();
+            }
+            else if(angle == 90f){
+                ChangeDirectionHorizontal();
+            }
+            else{
+                ChangeDirectionVertical();
+                ChangeDirectionHorizontal();
+            }
         }
     }
 }

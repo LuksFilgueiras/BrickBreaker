@@ -7,6 +7,10 @@ public class BrickWall : MonoBehaviour
     [SerializeField] private Brick brickPrefab;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private int brickLinesAmount = 3;
+    [SerializeField] private List<Brick> bricksInGame = new List<Brick>();
+    [SerializeField] private GameController gameController;
+
+    private int totalBricks;
 
 
     [Header("Wall positioning")]
@@ -30,15 +34,21 @@ public class BrickWall : MonoBehaviour
                 Brick brickInstance = Instantiate(brickPrefab, transform);
                 brickInstance.transform.position = new Vector3(wallStartPosition.x + brickWallHorizontalSize, wallStartPosition.y - brickWallVerticalSize, 0f);
                 brickWallHorizontalSize += brickPrefab.brickSizeHorizontal + horizontalBrickGap;
+                bricksInGame.Add(brickInstance);
             }
 
             brickWallHorizontalSize = 0f;
             brickWallVerticalSize += brickPrefab.brickSizeVertical + verticalBrickGap;
         }
 
+        totalBricks = bricksInGame.Count;
         brickWallHorizontalSize = Mathf.FloorToInt(brickAmount) * (brickPrefab.brickSizeHorizontal + horizontalBrickGap);
 
         CenterBrickWall();
+    }
+
+    void Update(){
+        CheckPlayerWin();
     }
 
     private float GetCameraWidth(){
@@ -50,5 +60,18 @@ public class BrickWall : MonoBehaviour
     private void CenterBrickWall(){
         float horizontalOffset = (GetCameraWidth() - brickWallHorizontalSize - horizontalWallOffset) / 2;
         transform.position += new Vector3(horizontalOffset, 0, 0);
+    }
+
+    private void CheckPlayerWin(){
+        int amount = 0;
+        foreach(Brick brick in bricksInGame){
+            if(brick == null){
+                amount++;
+            }
+        }
+
+        if(amount >= totalBricks){
+            gameController.WinGame();
+        }
     }
 }
