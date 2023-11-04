@@ -45,6 +45,11 @@ public class Ball : MonoBehaviour
     }
 
     private void Movement(){
+        if(rigidBody2D.velocity == Vector2.zero){
+            ChangeDirectionHorizontal();
+            ChangeDirectionVertical();
+        }
+
         if(transform.position.x >= horizontalLimit){
             transform.position = new Vector3(horizontalLimit, transform.position.y, 0);
             ChangeDirectionHorizontal();
@@ -66,7 +71,7 @@ public class Ball : MonoBehaviour
         }
 
         if(freeBall){
-            transform.position += new Vector3(horizontalSpeed, verticalSpeed) * Time.deltaTime;
+            rigidBody2D.velocity = new Vector3(horizontalSpeed, verticalSpeed);
         }else{
             transform.position = new Vector3(player.transform.position.x, startPoint.y);
         }

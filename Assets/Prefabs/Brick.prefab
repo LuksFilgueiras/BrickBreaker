@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6643604846857259535}
   - component: {fileID: 6643604846857259534}
   - component: {fileID: 2056032648}
-  - component: {fileID: -1312176792830702463}
+  - component: {fileID: -3794699964202694178}
   m_Layer: 0
   m_Name: Brick
   m_TagString: Brick
@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
     rgba: 4283519487
   spriteRenderer: {fileID: 6643604846857259535}
   ball: {fileID: 0}
---- !u!50 &-1312176792830702463
+--- !u!50 &-3794699964202694178
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -145,14 +145,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6643604846857259532}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
