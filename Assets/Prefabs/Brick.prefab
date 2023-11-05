@@ -137,6 +137,8 @@ MonoBehaviour:
     rgba: 4283519487
   spriteRenderer: {fileID: 6643604846857259535}
   ball: {fileID: 0}
+  audioSource: {fileID: 0}
+  destroyBrick: {fileID: 8300000, guid: 0e33b2d830d96834682c300d7787714d, type: 3}
 --- !u!50 &-3794699964202694178
 Rigidbody2D:
   serializedVersion: 4

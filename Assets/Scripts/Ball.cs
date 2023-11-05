@@ -15,6 +15,11 @@ public class Ball : MonoBehaviour
     [SerializeField] private Rigidbody2D rigidBody2D;
     [SerializeField] private Camera mainCamera;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip ballHit;
+    [SerializeField] private AudioClip loseBall;
+
 
     public Rigidbody2D GetRigidbody2D{
         get{return rigidBody2D;}
@@ -67,6 +72,7 @@ public class Ball : MonoBehaviour
 
         if(transform.position.y <= -verticalLimit){
             freeBall = false;
+            audioSource.PlayOneShot(loseBall);
             FindObjectOfType<Player>().RemoveLife(1);
         }
 
@@ -78,10 +84,20 @@ public class Ball : MonoBehaviour
     }
 
     public void ChangeDirectionVertical(){
+        if(!freeBall){
+            return;
+        }
+
+        audioSource.PlayOneShot(ballHit);
         verticalSpeed *= -1f;
     }
 
     public void ChangeDirectionHorizontal(){
+        if(!freeBall){
+            return;
+        }
+        
+        audioSource.PlayOneShot(ballHit);
         horizontalSpeed *= -1f;
     }
 
