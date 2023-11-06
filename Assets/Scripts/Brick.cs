@@ -17,15 +17,13 @@ public class Brick : MonoBehaviour
         transform.localScale = new Vector3(brickSizeHorizontal, brickSizeVertical, 0f);
     }
 
-    private void OnCollisionEnter2D(Collision2D col){
-        if(col.gameObject.tag == "Ball"){
-            healthAmount--;
-
-            if(healthAmount <= 0){
-                Destroy(gameObject);
-            }
-
-            spriteRenderer.color = visualHealthColors[healthAmount];
+    public void TakeDamage(){
+        healthAmount --;
+        
+        if(healthAmount <= 0){
+            Destroy(gameObject);
         }
+
+        spriteRenderer.color = visualHealthColors[healthAmount];
     }
 }

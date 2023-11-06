@@ -4,7 +4,6 @@ public class Ball : MonoBehaviour
 {
     [SerializeField] private float verticalSpeed = 1.5f;
     [SerializeField] private float horizontalSpeed = 1f;
-    [SerializeField] private float horizontalLimit = 0f;
     [SerializeField] private float verticalLimit = 0f;
     [SerializeField] private Vector3 startPoint = Vector3.zero;
     [SerializeField] private bool freeBall = false;
@@ -26,7 +25,6 @@ public class Ball : MonoBehaviour
     }
 
     void Start(){
-        horizontalLimit = ICamera.GetCameraWidth(mainCamera) / 2 - transform.localScale.x / 2;
         verticalLimit = mainCamera.orthographicSize - transform.localScale.x / 2;
         startPoint = transform.position;
     }
@@ -51,22 +49,6 @@ public class Ball : MonoBehaviour
 
     private void Movement(){
         if(rigidBody2D.velocity == Vector2.zero){
-            ChangeDirectionHorizontal();
-            ChangeDirectionVertical();
-        }
-
-        if(transform.position.x >= horizontalLimit){
-            transform.position = new Vector3(horizontalLimit, transform.position.y, 0);
-            ChangeDirectionHorizontal();
-        }
-
-        if(transform.position.x <= -horizontalLimit){
-            transform.position = new Vector3(-horizontalLimit, transform.position.y, 0);
-            ChangeDirectionHorizontal();
-        }
-
-        if(transform.position.y >= verticalLimit){
-            transform.position = new Vector3(transform.position.x, verticalLimit, 0);
             ChangeDirectionVertical();
         }
 
@@ -105,17 +87,20 @@ public class Ball : MonoBehaviour
         if(col.gameObject.tag == "Player"){
             Vector2 hit = col.GetContact(0).point;
             hit = col.gameObject.GetComponent<Transform>().InverseTransformPoint(hit);
+            float angle = Vector3.Angle(hit, Vector3.up);
 
-            if(hit.x > 0 && horizontalSpeed < 0){
-                ChangeDirectionHorizontal();
+            if(angle > 0){
+                if(hit.x > 0 && horizontalSpeed < 0){
+                    ChangeDirectionHorizontal();
+                }
+                if(hit.x < 0 && horizontalSpeed > 0){
+                    ChangeDirectionHorizontal();
+                }
+                
+                ChangeDirectionVertical();
             }
-            if(hit.x < 0 && horizontalSpeed > 0){
-                ChangeDirectionHorizontal();
-            }
-
-            ChangeDirectionVertical();
         }
-        if(col.gameObject.tag == "Brick"){
+        if(col.gameObject.tag == "Brick" || col.gameObject.tag == "Wall"){
             Vector3 hit = col.contacts[0].normal;
             float angle = Vector3.Angle(hit, Vector3.up);
 
@@ -128,6 +113,10 @@ public class Ball : MonoBehaviour
             else{
                 ChangeDirectionHorizontal();
                 ChangeDirectionVertical();
+            }
+
+            if(col.gameObject.GetComponent<Brick>()){
+                col.gameObject.GetComponent<Brick>().TakeDamage();
             }
         }
     }
